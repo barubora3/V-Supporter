@@ -10,6 +10,7 @@ import {
   ThumbsUp,
   ExternalLink,
   Check,
+  Search,
 } from "lucide-react";
 import { STREAM_MEMENTO_NFT_CONTRACRT_ADDRESS } from "@/lib/definition";
 import {
@@ -23,6 +24,7 @@ import {
   useSendTransaction,
   useReadContract,
 } from "thirdweb/react";
+import { Input } from "@/components/ui/input";
 
 const CHANNEL_ID = "UCiPB0TL3aE9i8E5SrVbCqTg"; // 対象のYouTubeチャンネルID
 const ALCHEMY_API_KEY = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY;
@@ -49,6 +51,9 @@ const client = createThirdwebClient({
 
 export const StreamMementoContent: React.FC = () => {
   const [isLive, setIsLive] = useState<boolean>(false);
+  const [channelId, setChannelId] = useState<string>(CHANNEL_ID);
+  const [username, setUsername] = useState<string>("");
+
   const [streamData, setStreamData] = useState<StreamData | null>(null);
   const [loading, setLoading] = useState(true);
   const [userNFTs, setUserNFTs] = useState<NFT[]>([]);
@@ -70,9 +75,30 @@ export const StreamMementoContent: React.FC = () => {
     client,
   });
 
+  const fetchChannelId = async (username: string) => {
+    try {
+      const response = await fetch(`/api/channel?username=${username}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch channel info");
+      }
+      const data = await response.json();
+      return data.id;
+    } catch (error) {
+      setError("Failed to fetch channel ID");
+      return null;
+    }
+  };
+
+  const handleSearch = async () => {
+    const fetchedChannelId = await fetchChannelId(username);
+    if (fetchedChannelId) {
+      setChannelId(fetchedChannelId);
+    }
+  };
+
   const fetchStreamStatus = async () => {
     try {
-      const response = await fetch(`/api/live?channelId=${CHANNEL_ID}`);
+      const response = await fetch(`/api/live?channelId=${channelId}`);
       if (!response.ok) {
         throw new Error("Failed to fetch stream status");
       }
@@ -140,7 +166,7 @@ export const StreamMementoContent: React.FC = () => {
 
   useEffect(() => {
     fetchStreamStatus();
-  }, []);
+  }, [channelId]);
 
   useEffect(() => {
     if (activeAccount) {
@@ -168,7 +194,31 @@ export const StreamMementoContent: React.FC = () => {
       <h2 className="text-2xl font-bold mb-4 text-indigo-800">
         Stream Memento
       </h2>
-      {streamData?.isLive ? (
+      <div className="mb-4 flex space-x-2">
+        <Input
+          type="text"
+          placeholder="Enter YouTube username (e.g., @example)"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <Button onClick={handleSearch}>
+          <Search className="w-4 h-4 mr-2" />
+          Search
+        </Button>
+      </div>
+      <p className="text-xs text-gray-500 italic mb-4">
+        Note: This search feature is not part of the actual service concept. Its
+        provided for demonstration purposes, allowing you to test the
+        functionality even when the default channel is not streaming. This
+        enables you to search for any active YouTube channel as an alternative,
+        ensuring you can experience the Stream Memento feature regardless of the
+        streaming status of a specific channel.
+      </p>
+      {loading ? (
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+        </div>
+      ) : streamData?.isLive ? (
         <Card className="p-6 bg-white shadow-lg rounded-xl mb-6">
           <div className="flex items-center mb-4">
             <Video className="w-6 h-6 text-red-500 mr-2 animate-pulse" />
