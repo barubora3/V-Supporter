@@ -61,6 +61,9 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "No channels found" }, { status: 404 });
     }
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal Sever Error" },
+      { status: 500 }
+    );
   }
 }

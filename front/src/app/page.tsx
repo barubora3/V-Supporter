@@ -22,12 +22,7 @@ import {
 import LoginButton from "@/components/LoginButton";
 import { DonateContent } from "./tabs/DonateContent";
 import { StreamMementoContent } from "./tabs/StreamMementoContent";
-import { useSearchParams } from "next/navigation";
 
-import { getContract, readContract } from "thirdweb";
-import { sepolia } from "thirdweb/chains";
-import { USDC_ADDRESS } from "@/lib/definition";
-import { formatUnits } from "viem";
 import { fetchUsdcBalance } from "@/lib/usdcUtils";
 
 // Color theme
@@ -89,10 +84,7 @@ const MainPage: React.FC = () => {
   const [copied, setCopied] = useState(false);
   const [usdcBalance, setUsdcBalance] = useState<string>("0");
   const [currentData, setCurrentData] = useState(dummyData);
-  const searchParams = useSearchParams();
   const [youtubeData, setYoutubeData] = useState<any>(null);
-
-  const username = searchParams.get("username");
 
   const tabData = [
     { name: "Donate", icon: DollarSign },
@@ -117,23 +109,21 @@ const MainPage: React.FC = () => {
     updateUsdcBalance();
   }, []);
 
-  useEffect(() => {
-    if (username) {
-      const fetchYouTubeData = async () => {
-        try {
-          console.log(`/api/channel?username=${username}`);
-          const response = await fetch(`/api/channel?username=${username}`);
-          const data = await response.json();
-          setYoutubeData(data);
-          console.log(data);
-        } catch (error) {
-          console.error("Failed to fetch YouTube data", error);
-        }
-      };
+  // useEffect(() => {
+  //   if (username) {
+  //     const fetchYouTubeData = async () => {
+  //       try {
+  //         const response = await fetch(`/api/channel?username=${username}`);
+  //         const data = await response.json();
+  //         setYoutubeData(data);
+  //       } catch (error) {
+  //         console.error("Failed to fetch YouTube data", error);
+  //       }
+  //     };
 
-      fetchYouTubeData();
-    }
-  }, [username]);
+  //     fetchYouTubeData();
+  //   }
+  // }, [username]);
 
   return (
     <div

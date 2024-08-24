@@ -1,6 +1,6 @@
 // app/api/live/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { google } from "googleapis";
+import { google, youtube_v3 } from "googleapis";
 
 const youtube = google.youtube({
   version: "v3",
@@ -30,24 +30,32 @@ export async function GET(request: NextRequest) {
       const liveStream = response.data.items[0];
       const videoId = liveStream.id?.videoId;
 
+      if (!videoId) {
+        throw new Error("Video ID is missing");
+      }
+
       // 追加の動画詳細を取得
       const videoDetails = await youtube.videos.list({
         part: ["snippet", "liveStreamingDetails", "statistics"],
         id: [videoId],
       });
 
-      const videoInfo = videoDetails.data.items[0];
+      const videoInfo = videoDetails.data.items?.[0];
+
+      if (!videoInfo) {
+        throw new Error("Video details are missing");
+      }
 
       return NextResponse.json({
         isLive: true,
-        title: liveStream.snippet?.title,
-        description: liveStream.snippet?.description,
-        thumbnailUrl: liveStream.snippet?.thumbnails?.high?.url,
-        channelTitle: liveStream.snippet?.channelTitle,
+        title: liveStream.snippet?.title ?? "",
+        description: liveStream.snippet?.description ?? "",
+        thumbnailUrl: liveStream.snippet?.thumbnails?.high?.url ?? "",
+        channelTitle: liveStream.snippet?.channelTitle ?? "",
         videoId: videoId,
-        viewCount: videoInfo?.statistics?.viewCount,
-        likeCount: videoInfo?.statistics?.likeCount,
-        startTime: videoInfo?.liveStreamingDetails?.actualStartTime,
+        viewCount: videoInfo.statistics?.viewCount ?? "0",
+        likeCount: videoInfo.statistics?.likeCount ?? "0",
+        startTime: videoInfo.liveStreamingDetails?.actualStartTime ?? "",
       });
     } else {
       return NextResponse.json({ isLive: false });
