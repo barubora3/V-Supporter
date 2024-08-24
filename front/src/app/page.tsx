@@ -35,7 +35,7 @@ const theme = {
 };
 const dummyData = {
   vtuber: {
-    name: "Kakuu Imagine",
+    name: "架空 イマジン/Kakuu Imagine",
     avatar: "/vtuber-icon.png",
     bio: "The ultimate virtual entertainer of the digital realm",
     walletAddress: "0x2e4B8ea28136Eae64FCE57F72a04CD732D7Db7cC",

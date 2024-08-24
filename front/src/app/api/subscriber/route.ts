@@ -9,7 +9,6 @@ export async function GET(request: Request) {
   const channelId = searchParams.get("channelId") || CHANNEL_ID;
 
   const url = `https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${channelId}&key=${YOUTUBE_API_KEY}`;
-  console.log(url);
   try {
     const response = await fetch(url);
 

@@ -1,4 +1,3 @@
-"use client";
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -25,8 +24,13 @@ import {
   useReadContract,
 } from "thirdweb/react";
 import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
-const CHANNEL_ID = "UCiPB0TL3aE9i8E5SrVbCqTg"; // 対象のYouTubeチャンネルID
 const ALCHEMY_API_KEY = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY;
 
 interface StreamData {
@@ -39,6 +43,7 @@ interface StreamData {
   viewCount?: number;
   likeCount?: number;
 }
+
 interface NFT {
   id: string;
   imageUrl: string;
@@ -50,17 +55,16 @@ const client = createThirdwebClient({
 });
 
 export const StreamMementoContent: React.FC = () => {
-  const [isLive, setIsLive] = useState<boolean>(false);
-  const [channelId, setChannelId] = useState<string>(CHANNEL_ID);
+  const [channelId, setChannelId] = useState<string>("");
   const [username, setUsername] = useState<string>("");
-
   const [streamData, setStreamData] = useState<StreamData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [userNFTs, setUserNFTs] = useState<NFT[]>([]);
   const [error, setError] = useState<null | string>(null);
   const [isMinting, setIsMinting] = useState(false);
   const [mintTxHash, setMintTxHash] = useState<string | null>(null);
   const [mintSuccess, setMintSuccess] = useState(false);
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
 
   const activeAccount = useActiveAccount();
   const {
@@ -84,19 +88,29 @@ export const StreamMementoContent: React.FC = () => {
       const data = await response.json();
       return data.id;
     } catch (error) {
-      setError("Failed to fetch channel ID");
+      setError(
+        "Failed to fetch channel ID.\n\n" +
+          "YouTube API has strict rate limits, which may cause occasional search failures.\n\n" +
+          "Please try again in a few minutes or search for a different channel.\n" +
+          "If the problem persists, the daily quota may have been reached."
+      );
+      setIsErrorModalOpen(true);
       return null;
     }
   };
 
   const handleSearch = async () => {
+    setLoading(true);
+    setError(null);
     const fetchedChannelId = await fetchChannelId(username);
     if (fetchedChannelId) {
       setChannelId(fetchedChannelId);
+      await fetchStreamStatus(fetchedChannelId);
     }
+    setLoading(false);
   };
 
-  const fetchStreamStatus = async () => {
+  const fetchStreamStatus = async (channelId: string) => {
     try {
       const response = await fetch(`/api/live?channelId=${channelId}`);
       if (!response.ok) {
@@ -106,8 +120,7 @@ export const StreamMementoContent: React.FC = () => {
       setStreamData(data);
     } catch (error) {
       setError("Failed to fetch stream status");
-    } finally {
-      setLoading(false);
+      setIsErrorModalOpen(true);
     }
   };
 
@@ -130,6 +143,7 @@ export const StreamMementoContent: React.FC = () => {
       setUserNFTs(nfts);
     } catch (error) {
       setError("Failed to fetch your NFTs");
+      setIsErrorModalOpen(true);
     }
   };
 
@@ -159,14 +173,11 @@ export const StreamMementoContent: React.FC = () => {
       await sendTransaction(transaction);
     } catch (err) {
       setError("Failed to mint NFT");
+      setIsErrorModalOpen(true);
     } finally {
       setIsMinting(false);
     }
   };
-
-  useEffect(() => {
-    fetchStreamStatus();
-  }, [channelId]);
 
   useEffect(() => {
     if (activeAccount) {
@@ -181,14 +192,6 @@ export const StreamMementoContent: React.FC = () => {
     }
   }, [isSuccess]);
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-64 bg-gradient-to-r from-blue-50 to-blue-100 rounded-2xl border-2 border-blue-300">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
-      </div>
-    );
-  }
-
   return (
     <div className="p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-2xl border-2 border-blue-300">
       <h2 className="text-2xl font-bold mb-4 text-indigo-800">
@@ -201,14 +204,14 @@ export const StreamMementoContent: React.FC = () => {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
-        <Button onClick={handleSearch}>
+        <Button onClick={handleSearch} disabled={loading}>
           <Search className="w-4 h-4 mr-2" />
-          Search
+          {loading ? "Searching..." : "Search"}
         </Button>
       </div>
       <p className="text-xs text-gray-500 italic mb-4">
-        Note: This search feature is not part of the actual service concept. Its
-        provided for demonstration purposes, allowing you to test the
+        Note: This search feature is not part of the actual service concept.
+        It's provided for demonstration purposes, allowing you to test the
         functionality even when the default channel is not streaming. This
         enables you to search for any active YouTube channel as an alternative,
         ensuring you can experience the Stream Memento feature regardless of the
@@ -305,7 +308,6 @@ export const StreamMementoContent: React.FC = () => {
               Watch on YouTube
             </Button>
           </div>
-          {error && <p className="text-red-500 mb-4">{error}</p>}
           {mintSuccess && (
             <p className="text-green-500 mb-4">
               NFT minted successfully! Transaction hash: {mintTxHash}
@@ -315,9 +317,9 @@ export const StreamMementoContent: React.FC = () => {
             <p className="text-yellow-500 mb-4">
               Please connect your wallet to mint NFTs.
             </p>
-          )}{" "}
+          )}
         </Card>
-      ) : (
+      ) : channelId ? (
         <Card className="p-6 bg-white shadow-lg rounded-xl mb-6">
           <div className="flex items-center mb-4">
             <AlertCircle className="w-6 h-6 text-yellow-500 mr-2" />
@@ -330,7 +332,7 @@ export const StreamMementoContent: React.FC = () => {
             live content!
           </p>
         </Card>
-      )}
+      ) : null}
 
       {/* User's NFTs section */}
       {activeAccount && (
@@ -351,7 +353,6 @@ export const StreamMementoContent: React.FC = () => {
                     {nft.title}
                   </p>
                   <p className="text-xs text-gray-500">
-                    {" "}
                     Token ID: {Number(nft.id)}
                   </p>
                 </div>
@@ -359,11 +360,22 @@ export const StreamMementoContent: React.FC = () => {
             </div>
           ) : (
             <p className="text-gray-500">
-              You don&apos;t have any Stream Memento NFTs yet.
+              You don't have any Stream Memento NFTs yet.
             </p>
           )}
         </Card>
       )}
+
+      {/* Error Modal */}
+      <Dialog open={isErrorModalOpen} onOpenChange={setIsErrorModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Error</DialogTitle>
+          </DialogHeader>
+          <div className="text-gray-700 whitespace-pre-line">{error}</div>
+          <Button onClick={() => setIsErrorModalOpen(false)}>Close</Button>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

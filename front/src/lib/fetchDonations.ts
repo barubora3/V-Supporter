@@ -33,15 +33,12 @@ const DONATE_CONTRACT_ABI = [
 
 export const fetchDonations = async (startIndex: bigint, limit: bigint) => {
   try {
-    console.log("A");
     const data = await publicClient.readContract({
       address: DONATE_CONTRACT_ADDRESS,
       abi: DONATE_CONTRACT_ABI,
       functionName: "getDonationsPaginated",
       args: [startIndex, limit],
     });
-
-    console.log(data);
 
     const [donationsResult, hasMore] = data as [any[], boolean];
 

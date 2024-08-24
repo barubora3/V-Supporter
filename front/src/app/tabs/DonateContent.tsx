@@ -22,7 +22,6 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Progress } from "@/components/ui/progress";
 import { Check, X, RefreshCw, Loader2 } from "lucide-react";
 import { fetchDonations } from "@/lib/fetchDonations";
 
@@ -50,7 +49,7 @@ export const DonateContent: React.FC = () => {
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [maxAmount, setMaxAmount] = useState<number | null>(100);
 
-  const itemsPerPage = 10;
+  const itemsPerPage = 100;
 
   const activeAccount = useActiveAccount();
   const { mutate: sendBatch } = useSendBatchTransaction();
@@ -145,7 +144,21 @@ export const DonateContent: React.FC = () => {
 
   return (
     <div className="p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-2xl border-2 border-blue-300">
-      <h2 className="text-2xl font-bold mb-4 text-blue-800">Donate USDC</h2>
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-2xl font-bold text-blue-800">Donate USDC</h2>
+        <a
+          href={
+            "https://sepolia.etherscan.io/address/" +
+            DONATE_CONTRACT_ADDRESS +
+            "#tokentxns"
+          }
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-600 hover:underline text-sm"
+        >
+          Check Onchain History
+        </a>
+      </div>
 
       {/* Donation Form */}
       <Card className="p-4 mb-6 bg-white shadow-lg rounded-lg">
@@ -264,6 +277,11 @@ export const DonateContent: React.FC = () => {
                     Donation completed!
                   </p>
                   <Check className="w-12 h-12 text-green-500 mx-auto" />
+                  <p className="mb-4">
+                    Your transaction has been sent. <br />
+                    It may take some time for the on-chain data to be updated.
+                    Please wait a moment.
+                  </p>
                 </div>
               ) : (
                 <div className="text-center">

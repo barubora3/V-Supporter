@@ -5,7 +5,6 @@ const API_KEY = process.env.YOUTUBE_API_KEY;
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const username = url.searchParams.get("username");
-
   if (!username) {
     return NextResponse.json(
       { error: "Username is required" },
@@ -54,13 +53,15 @@ export async function GET(request: Request) {
 
       return NextResponse.json(result, {
         headers: {
-          "Cache-Control": "public, s-maxage=600, stale-while-revalidate=59",
+          "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=59",
         },
       });
     } else {
       return NextResponse.json({ error: "No channels found" }, { status: 404 });
     }
   } catch (error) {
+    console.log(searchUrl);
+    console.log(error);
     return NextResponse.json(
       { error: "Internal Sever Error" },
       { status: 500 }
