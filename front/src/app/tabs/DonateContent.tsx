@@ -1,4 +1,3 @@
-"use client";
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -49,6 +48,7 @@ export const DonateContent: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showCheck, setShowCheck] = useState(false);
   const [hasMore, setHasMore] = useState<boolean>(true);
+  const [maxAmount, setMaxAmount] = useState<number | null>(100);
 
   const itemsPerPage = 10;
 
@@ -78,9 +78,25 @@ export const DonateContent: React.FC = () => {
     setIsLoading(false);
   };
 
+  //   const fetchBalance = async () => {
+  //     if (activeAccount) {
+  //       try {
+  //         const balance = await readContract({
+  //           contract: usdcContract,
+  //           method: "balanceOf",
+  //           params: [activeAccount.address],
+  //         });
+  //         setMaxAmount(Number(balance)); // Convert balance to number
+  //       } catch (error) {
+  //         console.error("Failed to fetch balance:", error);
+  //       }
+  //     }
+  //   };
+
   useEffect(() => {
     fetchDonationsData();
-  }, [page]);
+    // fetchBalance(); // Fetch balance on mount
+  }, [page, activeAccount]);
 
   const totalPages = Math.ceil(donations.length / itemsPerPage);
   const paginatedDonations = donations.slice(
@@ -89,21 +105,21 @@ export const DonateContent: React.FC = () => {
   );
 
   const handleDonate = async () => {
-    if (!amount || !activeAccount) return;
+    if (!amount || !activeAccount || Number(amount) <= 0) return;
     const amountInTokenUnits = parseUnits(amount, 6); // USDC has 6 decimal places
 
     try {
-      setShowModal(true); // モーダルを表示
+      setShowModal(true); // Show modal
       setIsLoading(true);
 
-      // 承認トランザクションの作成
+      // Create approval transaction
       const approveTx = approve({
         contract: usdcContract,
         amount: amount,
         spender: donateContract.address,
       });
 
-      // 寄付トランザクションの作成
+      // Create donation transaction
       const donateTx = prepareContractCall({
         contract: donateContract,
         method:
@@ -111,19 +127,19 @@ export const DonateContent: React.FC = () => {
         params: [USDC_ADDRESS, amountInTokenUnits, message],
       });
 
-      // トランザクションを送信
+      // Send transactions
       await sendBatch([approveTx, donateTx]);
 
-      // トランザクション成功後の処理
+      // After transaction is successful
       setIsLoading(false);
-      setShowCheck(true); // 成功チェックマークを表示
+      setShowCheck(true); // Show success checkmark
 
-      // フェッチデータの呼び出し
+      // Fetch updated donations data
       await fetchDonationsData();
     } catch (error) {
       console.error("Donation process failed:", error);
       setIsLoading(false);
-      setShowCheck(false); // エラーの場合はチェックマークを非表示
+      setShowCheck(false); // Hide success checkmark on error
     }
   };
 
@@ -139,7 +155,17 @@ export const DonateContent: React.FC = () => {
               type="number"
               placeholder="Amount in USDC"
               value={amount}
-              onChange={(e) => setAmount(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                // Ensure the value is non-negative and within maxAmount
+                if (
+                  value === "" ||
+                  (Number(value) >= 0 && Number(value) <= (maxAmount || 0))
+                ) {
+                  setAmount(value);
+                }
+              }}
+              min="0" // Prevent negative values
               className="w-full"
             />
           </div>
@@ -155,7 +181,7 @@ export const DonateContent: React.FC = () => {
         <div className="flex justify-center">
           <Button
             onClick={handleDonate}
-            disabled={isLoading || !activeAccount}
+            disabled={isLoading || !activeAccount || Number(amount) <= 0}
             className="bg-blue-400 text-white py-2 px-8 rounded hover:bg-blue-500 transition-colors"
           >
             {isLoading ? "Processing..." : "Donate"}

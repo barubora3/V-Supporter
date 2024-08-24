@@ -1,13 +1,7 @@
 import { createClient, parseUnits, formatUnits } from "viem";
 import { sepolia } from "viem/chains";
 import { DONATE_CONTRACT_ADDRESS } from "./definition";
-import { createPublicClient, http } from "viem";
-
-const ALCHEMY_API_KEY = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY; // Alchemy の API キー
-
-export const publicClient = createPublicClient({
-  transport: http(`https://eth-sepolia.g.alchemy.com/v2/${ALCHEMY_API_KEY}`),
-});
+import { publicClient } from "./client";
 // コントラクトのABI
 const DONATE_CONTRACT_ABI = [
   {
