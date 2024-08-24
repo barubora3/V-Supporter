@@ -12,6 +12,10 @@
     "@radix-ui/react-avatar": "^1.1.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-tabs": "^1.1.0",
+    "@radix-ui/react-tooltip": "^1.1.2",
+    "@stripe/crypto": "^0.0.4",
+    "@stripe/stripe-js": "stripe/stripe-js",
+    "@transak/transak-sdk": "^3.1.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.435.0",
@@ -20,7 +24,8 @@
     "react-dom": "^18",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
-    "thirdweb": "^5.48.1"
+    "thirdweb": "^5.48.1",
+    "transak-partner-sdk": "^1.0.12"
   },
   "devDependencies": {
     "@types/node": "^20",
