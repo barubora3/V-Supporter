@@ -126,125 +126,127 @@ const MainPage: React.FC = () => {
   // }, [username]);
 
   return (
-    <div
-      className={`container mx-auto p-4 max-w-4xl bg-gradient-to-b ${theme.gradient} min-h-screen`}
-    >
-      <div className="text-end flex justify-end pb-4 pr-4">
-        <LoginButton />
-      </div>
-      <Card
-        className={`p-6 ${theme.secondary}/80 backdrop-blur-sm ${theme.border} rounded-2xl shadow-lg mb-6`}
+    <div className={` bg-gradient-to-b ${theme.gradient}  w-full`}>
+      <div
+        className={`container mx-auto p-4 max-w-4xl bg-gradient-to-b ${theme.gradient} min-h-screen`}
       >
-        <div className="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6">
-          <Avatar className={`w-32 h-32 border-4 ${theme.border}`}>
-            <AvatarImage src={dummyData.vtuber.avatar} />
-          </Avatar>
-          <div className="flex-grow">
-            <h1 className={`text-3xl font-bold ${theme.text}`}>
-              {dummyData.vtuber.name}
-            </h1>
-            <p className={`${theme.text} mt-2`}>{dummyData.vtuber.bio}</p>
-            <div className="mt-4 flex flex-wrap items-start justify-between gap-4">
-              <div className="flex space-x-4">
-                <a
-                  href={dummyData.vtuber.socialLinks.twitter}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-400 hover:text-blue-600"
-                >
-                  <Twitter />
-                </a>
-                <a
-                  href={dummyData.vtuber.socialLinks.youtube}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-red-500 hover:text-red-700"
-                >
-                  <Youtube />
-                </a>
-                <a
-                  href={dummyData.vtuber.socialLinks.twitch}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-purple-500 hover:text-purple-700"
-                >
-                  <Twitch />
-                </a>
-                <a
-                  href={dummyData.vtuber.socialLinks.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-green-500 hover:text-green-700"
-                >
-                  <Globe />
-                </a>
-              </div>
-              <div className="flex space-x-4">
-                <div>
-                  <span className="text-sm font-semibold text-gray-600">
-                    Wallet:
-                  </span>
-                  <button
-                    onClick={() =>
-                      copyToClipboard(dummyData.vtuber.walletAddress)
-                    }
-                    className="text-sm font-mono text-blue-700 flex items-center hover:text-blue-900 transition-colors"
+        <div className="text-end flex justify-end pb-4 pr-4">
+          <LoginButton />
+        </div>
+        <Card
+          className={`p-6 ${theme.secondary}/80 backdrop-blur-sm ${theme.border} rounded-2xl shadow-lg mb-6`}
+        >
+          <div className="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6">
+            <Avatar className={`w-32 h-32 border-4 ${theme.border}`}>
+              <AvatarImage src={dummyData.vtuber.avatar} />
+            </Avatar>
+            <div className="flex-grow">
+              <h1 className={`text-3xl font-bold ${theme.text}`}>
+                {dummyData.vtuber.name}
+              </h1>
+              <p className={`${theme.text} mt-2`}>{dummyData.vtuber.bio}</p>
+              <div className="mt-4 flex flex-wrap items-start justify-between gap-4">
+                <div className="flex space-x-4">
+                  <a
+                    href={dummyData.vtuber.socialLinks.twitter}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-400 hover:text-blue-600"
                   >
-                    {dummyData.vtuber.walletAddress.slice(0, 6)}...
-                    {dummyData.vtuber.walletAddress.slice(-4)}
-                    {copied ? (
-                      <Check className="w-4 h-4 ml-2 text-green-500" />
-                    ) : (
-                      <Copy className="w-4 h-4 ml-2" />
-                    )}
-                  </button>
+                    <Twitter />
+                  </a>
+                  <a
+                    href={dummyData.vtuber.socialLinks.youtube}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    <Youtube />
+                  </a>
+                  <a
+                    href={dummyData.vtuber.socialLinks.twitch}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-purple-500 hover:text-purple-700"
+                  >
+                    <Twitch />
+                  </a>
+                  <a
+                    href={dummyData.vtuber.socialLinks.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-green-500 hover:text-green-700"
+                  >
+                    <Globe />
+                  </a>
                 </div>
-                <div className="flex flex-col">
-                  <span className="text-sm font-semibold text-gray-600">
-                    USDC Balance:
-                  </span>
-                  <span className="text-sm font-mono text-blue-700 pt-1">
-                    {usdcBalance} USDC
-                  </span>
+                <div className="flex space-x-4">
+                  <div>
+                    <span className="text-sm font-semibold text-gray-600">
+                      Wallet:
+                    </span>
+                    <button
+                      onClick={() =>
+                        copyToClipboard(dummyData.vtuber.walletAddress)
+                      }
+                      className="text-sm font-mono text-blue-700 flex items-center hover:text-blue-900 transition-colors"
+                    >
+                      {dummyData.vtuber.walletAddress.slice(0, 6)}...
+                      {dummyData.vtuber.walletAddress.slice(-4)}
+                      {copied ? (
+                        <Check className="w-4 h-4 ml-2 text-green-500" />
+                      ) : (
+                        <Copy className="w-4 h-4 ml-2" />
+                      )}
+                    </button>
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-semibold text-gray-600">
+                      USDC Balance:
+                    </span>
+                    <span className="text-sm font-mono text-blue-700 pt-1">
+                      {usdcBalance} USDC
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </Card>
+        </Card>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList
-          className={`grid w-full grid-cols-4 ${theme.secondary}/60 backdrop-blur-sm rounded-full p-1 ${theme.border}`}
-        >
-          {tabData.map((tab, index) => {
-            const IconComponent = tab.icon;
-            return (
-              <TabsTrigger
-                key={index}
-                value={String(index + 1)}
-                className="rounded-full transition-all flex items-center justify-center"
-              >
-                <IconComponent className="w-5 h-5 mr-2" aria-hidden="true" />
-                <span>{tab.name}</span>
-              </TabsTrigger>
-            );
-          })}
-        </TabsList>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList
+            className={`grid w-full grid-cols-4 ${theme.secondary}/60 backdrop-blur-sm rounded-full p-1 ${theme.border}`}
+          >
+            {tabData.map((tab, index) => {
+              const IconComponent = tab.icon;
+              return (
+                <TabsTrigger
+                  key={index}
+                  value={String(index + 1)}
+                  className="rounded-full transition-all flex items-center justify-center"
+                >
+                  <IconComponent className="w-5 h-5 mr-2" aria-hidden="true" />
+                  <span>{tab.name}</span>
+                </TabsTrigger>
+              );
+            })}
+          </TabsList>
 
-        <TabsContent value="1">
-          <DonateContent />
-        </TabsContent>
-        <TabsContent value="2">
-          <StreamMementoContent />
-        </TabsContent>
-        <TabsContent value="3">
-          <CrowdfundingContent campaigns={dummyData.crowdfundingCampaigns} />
-        </TabsContent>
-        <TabsContent value="4">
-          <PredictionsContent predictions={dummyData.predictions} />
-        </TabsContent>
-      </Tabs>
+          <TabsContent value="1">
+            <DonateContent />
+          </TabsContent>
+          <TabsContent value="2">
+            <StreamMementoContent />
+          </TabsContent>
+          <TabsContent value="3">
+            <CrowdfundingContent campaigns={dummyData.crowdfundingCampaigns} />
+          </TabsContent>
+          <TabsContent value="4">
+            <PredictionsContent predictions={dummyData.predictions} />
+          </TabsContent>
+        </Tabs>
+      </div>
     </div>
   );
 };

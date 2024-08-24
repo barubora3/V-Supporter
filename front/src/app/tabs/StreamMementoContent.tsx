@@ -183,14 +183,14 @@ export const StreamMementoContent: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-64">
+      <div className="flex justify-center items-center h-64 bg-gradient-to-r from-blue-50 to-blue-100 rounded-2xl border-2 border-blue-300">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
       </div>
     );
   }
 
   return (
-    <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg shadow-md">
+    <div className="p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-2xl border-2 border-blue-300">
       <h2 className="text-2xl font-bold mb-4 text-indigo-800">
         Stream Memento
       </h2>
