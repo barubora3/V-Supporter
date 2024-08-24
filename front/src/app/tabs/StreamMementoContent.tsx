@@ -210,8 +210,8 @@ export const StreamMementoContent: React.FC = () => {
         </Button>
       </div>
       <p className="text-xs text-gray-500 italic mb-4">
-        Note: This search feature is not part of the actual service concept.
-        It's provided for demonstration purposes, allowing you to test the
+        Note: This search feature is not part of the actual service concept. Its
+        provided for demonstration purposes, allowing you to test the
         functionality even when the default channel is not streaming. This
         enables you to search for any active YouTube channel as an alternative,
         ensuring you can experience the Stream Memento feature regardless of the
@@ -360,7 +360,7 @@ export const StreamMementoContent: React.FC = () => {
             </div>
           ) : (
             <p className="text-gray-500">
-              You don't have any Stream Memento NFTs yet.
+              You dont have any Stream Memento NFTs yet.
             </p>
           )}
         </Card>
