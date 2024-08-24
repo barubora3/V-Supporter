@@ -1,6 +1,12 @@
 "use client";
 import { createThirdwebClient } from "thirdweb";
-import { ConnectButton, lightTheme, useActiveWallet } from "thirdweb/react";
+import {
+  ConnectButton,
+  lightTheme,
+  useActiveWallet,
+  useActiveAccount,
+  useSendTransaction,
+} from "thirdweb/react";
 import { sepolia } from "thirdweb/chains";
 import { useEffect, useState } from "react";
 import { USDC_ADDRESS } from "@/lib/definition";

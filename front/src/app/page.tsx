@@ -19,6 +19,7 @@ import {
   ChevronLeft,
 } from "lucide-react";
 import LoginButton from "@/components/LoginButton";
+import { DonateContent } from "./tabs/DonateContent";
 
 const dummyData = {
   vtuber: {
@@ -210,7 +211,7 @@ const MainPage: React.FC = () => {
         </TabsList>
 
         <TabsContent value="1">
-          <DonateContent donations={dummyData.donations} />
+          <DonateContent />
         </TabsContent>
         <TabsContent value="2">
           <CrowdfundingContent campaigns={dummyData.crowdfundingCampaigns} />
@@ -222,55 +223,6 @@ const MainPage: React.FC = () => {
           <FanArtContent fanArt={dummyData.fanArt} />
         </TabsContent>
       </Tabs>
-    </div>
-  );
-};
-
-const DonateContent: React.FC<{ donations: any[] }> = ({ donations }) => {
-  const [page, setPage] = useState(1);
-  const itemsPerPage = 5;
-  const totalPages = Math.ceil(donations.length / itemsPerPage);
-
-  const paginatedDonations = donations.slice(
-    (page - 1) * itemsPerPage,
-    page * itemsPerPage
-  );
-
-  return (
-    <div className="p-4 bg-white/80 backdrop-blur-sm rounded-2xl border-2 border-pink-300">
-      <h2 className="text-2xl font-bold mb-4 text-purple-800">
-        Recent Donations
-      </h2>
-      <ul className="space-y-4">
-        {paginatedDonations.map((donation, index) => (
-          <li
-            key={index}
-            className="flex justify-between items-center p-3 bg-pink-100 rounded-lg"
-          >
-            <span className="font-semibold text-pink-800">{donation.name}</span>
-            <span className="text-green-600 font-bold">${donation.amount}</span>
-          </li>
-        ))}
-      </ul>
-      <div className="flex justify-between mt-4">
-        <Button
-          onClick={() => setPage((p) => Math.max(1, p - 1))}
-          disabled={page === 1}
-          className="bg-pink-400 hover:bg-pink-500"
-        >
-          <ChevronLeft className="w-4 h-4 mr-2" /> Previous
-        </Button>
-        <span className="text-purple-800">
-          Page {page} of {totalPages}
-        </span>
-        <Button
-          onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-          disabled={page === totalPages}
-          className="bg-pink-400 hover:bg-pink-500"
-        >
-          Next <ChevronRight className="w-4 h-4 ml-2" />
-        </Button>
-      </div>
     </div>
   );
 };
