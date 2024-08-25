@@ -7,9 +7,11 @@ https://v-supporter.vercel.app/
 テスト用のUSDCはFaucetから取得できます
 
 
-English description transrate from AKINDO
+# English description transrate from AKINDO
 
-V Supporter
+# V Supporter
+
+## What it does
 V Supporter is an on-chain tool designed to connect VTubers with their fans, offering various support and engagement features.
 What it does
 V Supporter provides the following key features:
@@ -20,20 +22,20 @@ Social Login Function: Easy wallet connection through social login.
 On-ramp Function: Purchase of stablecoins (USDC) using credit cards.
 Gas-less Transaction Function: Gas-less transactions enabled by Account Abstraction (AA).
 
-The problem it solves
+## The problem it solves
 
 Significantly reduces payment fees compared to existing platforms, improving VTubers' earnings. Fans' support is recorded on-chain.
 Allows fans to keep NFT records of watched streams (Stream Mementos), fostering a sense of seniority (similar to YouTube subscription history bragging).
 3, 4, 5. Simplifies major barriers for non-crypto users (wallet creation, on-ramping, transaction execution).
 
-Challenges we ran into
+## Challenges we ran into
 
 Struggled to select an on-ramp service available in Japan. Many services are restricted in Japan, even in development environments.
 Transak's staging environment was usable, but availability of the production environment in Japan remains uncertain.
 Attempted to create an oracle to make live stream information obtained from the YouTube API available on-chain for more precise NFT minting.
 Encountered difficulties during the deployment of an API3 oracle node and had to abandon its use due to time constraints.
 
-Technologies we used
+## Technologies we used
 Main technologies:
 
 Thirdweb (Smart Wallet, Gas Sponsored Transaction)
@@ -44,7 +46,7 @@ Others (standard dApps development technologies):
 
 Next.js, Tailwind CSS, shadcn/ui, Vercel, viem, Alchemy, Hardhat
 
-How we built it
+## How we built it
 1. Donate Function
 
 Created a smart contract for donations.
@@ -72,7 +74,7 @@ Implements Transak for on-ramping.
 
 Uses Thirdweb's Gas Sponsorship feature.
 
-What we learned
+## What we learned
 
 Signature verification and oracles enable interesting NFT minting based on off-chain data.
 Thirdweb's wallet features have evolved, simplifying AA wallet issuance and transaction execution via social login.
@@ -81,7 +83,7 @@ The ability to create seamless user experiences might increase the risk of asset
 Technical challenges for blockchain adoption without understanding the underlying mechanisms are being addressed.
 Remaining challenges for mass adoption in Japan include the popularization of JPY stablecoins and on-ramp service restrictions.
 
-What's next for V Supporter
+## What's next
 
 Implement VTuber account registration features
 Develop VTuber dashboard
