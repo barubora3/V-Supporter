@@ -1,0 +1,6 @@
+AKINDOのページにサービスURL書くの忘れてました
+下記URLで実際に触れるのでAAでのTx実行をぜひ試してみてください
+https://v-supporter.vercel.app/
+
+あと、クレカでの購入フローを一通りやってもUSDCは送られてきません (テスト環境だと代わりにTranzakトークンが送られてきます)
+テスト用のUSDCはFaucetから取得できます
