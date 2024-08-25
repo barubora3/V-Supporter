@@ -63,16 +63,16 @@ Metadata is stored in the contract's storage.
 To prevent unauthorized minting, a signature verification mechanism is implemented using the service operation wallet's private key.
 
 3. Social Login Function
-
 Utilizes Thirdweb's Smart Account feature.
+https://portal.thirdweb.com/connect/account-abstraction/how-it-works
 
 4. Stablecoin (USDC) Purchase with Credit Card
-
 Implements Transak for on-ramping.
+https://transak.com/
 
 5. Gas-less Transaction Function
-
 Uses Thirdweb's Gas Sponsorship feature.
+https://portal.thirdweb.com/connect/account-abstraction/sponsorship-rules
 
 ## What we learned
 
